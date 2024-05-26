@@ -108,12 +108,12 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
-        if (Input.GetKey(KeyCode.LeftShift) && _thrusterFuel > 1f)
+        if (Input.GetKey(KeyCode.LeftShift) && _thrusterFuel >= 0f)
         {
             transform.Translate(direction * _speed * _boostMultiplier * Time.deltaTime);
             _thruster.gameObject.SetActive(true);
             _thrusterFuel = _thrusterFuel - 20 * Time.deltaTime;
-            _uiManager.UpdateBoostSlider((int) _thrusterFuel);
+            _uiManager.UpdateBoost((int) _thrusterFuel);
         }
         else
         {
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
             if (Time.time > _boostRecharge && _thrusterFuel < 100)
             {
                 _thrusterFuel = _thrusterFuel + 10 * Time.deltaTime;
-                _uiManager.UpdateBoostSlider((int) _thrusterFuel);
+                _uiManager.UpdateBoost((int) _thrusterFuel);
             }
         }
 

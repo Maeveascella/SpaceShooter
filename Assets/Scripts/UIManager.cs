@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     private Text _RestartText;
     [SerializeField]
     private Slider _fuelSlider;
+    [SerializeField]
+    private Text _fuelText;
 
     [SerializeField]
     private GameManager _gameManager;
@@ -58,9 +60,10 @@ public class UIManager : MonoBehaviour
         _AmmoText.text = "Ammo: " + currentAmmo;ToString();
     }
 
-    public void UpdateBoostSlider(int currentBoost)
+    public void UpdateBoost(int currentBoost)
     {
         _fuelSlider.value = currentBoost;
+        _fuelText.text =  "" + currentBoost;ToString();
     }
 
     public void PlayerDeath()
