@@ -1926,6 +1926,7 @@ MonoBehaviour:
   _RestartText: {fileID: 2145349517}
   _fuelSlider: {fileID: 293526740}
   _fuelText: {fileID: 112754055}
+  _waveText: {fileID: 168273410}
   _gameManager: {fileID: 146025829}
   _AmmoText: {fileID: 29584501}
   _Shields:
@@ -2448,6 +2449,8 @@ MonoBehaviour:
   _enemyPrefab: {fileID: 5228658367802619428, guid: 72f5df3094edf914b814367252ad63ff, type: 3}
   _spawnrate: 2.5
   _enemyContainer: {fileID: 1743150323}
+  _enemiesKilled: 0
+  _toClear: 3
   _spawnCount: 0
   Powerups:
   - {fileID: 6748350042110621176, guid: 8f4d9d13d3caa7d4a9e9de6dd57b3992, type: 3}
@@ -2456,6 +2459,7 @@ MonoBehaviour:
   - {fileID: 2415606770414607946, guid: 638689dee234d6c4897d80ae3e8aa3cb, type: 3}
   _Ammo: {fileID: 6209157987202471625, guid: 742b7c6870863d545b5e39357f217ece, type: 3}
   _LifeUp: {fileID: 6256303223501261118, guid: 27869d9df1a870444b66562ca6e68806, type: 3}
+  isWaveClear: 0
 --- !u!4 &1878288492
 Transform:
   m_ObjectHideFlags: 0
