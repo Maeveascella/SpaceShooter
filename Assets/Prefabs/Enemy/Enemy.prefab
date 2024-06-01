@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 3.5
   _anim: {fileID: 0}
-  _EnemyLasers: {fileID: 5690295749699420823, guid: 3d8d935c57470e64dac0bf7126d483f3, type: 3}
+  _enemyLasers: {fileID: 5690295749699420823, guid: 3d8d935c57470e64dac0bf7126d483f3, type: 3}
 --- !u!212 &-7457065369623950757
 SpriteRenderer:
   m_ObjectHideFlags: 0

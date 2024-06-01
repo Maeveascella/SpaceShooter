@@ -5,16 +5,17 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 4f;
+    private float _randomX;
 
     private Player _player;
 
     [SerializeField]
     private Animator _anim;
 
-    private AudioSource _ExplodeAudio;
+    private AudioSource _explodeAudio;
 
     [SerializeField]
-    private GameObject _EnemyLasers;
+    private GameObject _enemyLasers;
     private float _fireRate;
     private float _canFire = -1f;
     private bool _isEnemyDead = false;
@@ -22,8 +23,8 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _ExplodeAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
-        if (_ExplodeAudio == null)
+        _explodeAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+        if (_explodeAudio == null)
         {
             Debug.LogError("Explosion Audio Not Found");
         }
@@ -39,24 +40,20 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("Animator not found");
         }
+
+        _randomX = Random.Range(-1f, 1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-
-        if (transform.position.y <= -6.5f)
-        {
-            //float RandomX = Random.Range (-10.5f, 10.5f)
-            transform.position = new Vector3(Random.Range(-10.5f, 10.5f), 8.5f, 0);
-        }
+        EnemyMovement();
 
         if (Time.time > _canFire && _isEnemyDead == false)
         {
             _fireRate = Random.Range(4f, 7f);
             _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_EnemyLasers, transform.position + new Vector3(-1.983f, -0.45f, 0), Quaternion.identity);
+            GameObject enemyLaser = Instantiate(_enemyLasers, transform.position + new Vector3(-1.983f, -0.45f, 0), Quaternion.identity);
             Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
             
             for (int i = 0; i < lasers.Length; i++)
@@ -95,8 +92,30 @@ public class Enemy : MonoBehaviour
         _isEnemyDead = true;
         _anim.SetTrigger("OnEnemy Death");
         _speed = 0;
-        _ExplodeAudio.Play();
+        _explodeAudio.Play();
         Destroy(GetComponent<Collider2D>());
         Destroy(this.gameObject, 2.3f);
+    }
+
+    private void EnemyMovement()
+    {
+
+        transform.Translate(new Vector3 ((_randomX), -1, 0) * _speed * Time.deltaTime);
+
+
+        if (transform.position.y <= -6.5f)
+        {
+            //float RandomX = Random.Range (-10.5f, 10.5f)
+            transform.position = new Vector3(Random.Range(-10.5f, 10.5f), 8.5f, 0);
+        }
+
+        if (transform.position.x <= -11.1f)
+        {
+            transform.position = new Vector3(11.1f, transform.position.y, 0);
+        }
+        else if (transform.position.x > 11.1f)
+        {
+            transform.position = new Vector3(-11.1f, transform.position.y, 0);
+        }
     }
 }
