@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     private Text _fuelText;
 
     [SerializeField]
+    private Text _waveText;
+
+    [SerializeField]
     private GameManager _gameManager;
     [SerializeField]
     private Text _AmmoText;
@@ -84,6 +87,11 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
+    }
+
+    public void UpdateWave(int currentwave)
+    {
+        _waveText.text = "Wave: " + currentwave;ToString();
     }
 
     public void UpdateShield(int shieldLives)

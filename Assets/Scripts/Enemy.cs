@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     private float _fireRate;
     private float _canFire = -1f;
     private bool _isEnemyDead = false;
+    private SpawnManager _spawnManager;
 
     // Start is called before the first frame update
     void Start()
@@ -41,26 +42,20 @@ public class Enemy : MonoBehaviour
             Debug.LogError("Animator not found");
         }
 
-        _randomX = Random.Range(-1f, 1f);
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("Spawn Manager Not found");
+        }
+
+        _randomX = Random.Range(-.5f, .5f);
     }
 
     // Update is called once per frame
     void Update()
     {
         EnemyMovement();
-
-        if (Time.time > _canFire && _isEnemyDead == false)
-        {
-            _fireRate = Random.Range(4f, 7f);
-            _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_enemyLasers, transform.position + new Vector3(-1.983f, -0.45f, 0), Quaternion.identity);
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-            
-            for (int i = 0; i < lasers.Length; i++)
-            {
-                lasers[i].AssignEnemyLaser();
-            }
-        }
+        EnemyFire();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -95,6 +90,7 @@ public class Enemy : MonoBehaviour
         _explodeAudio.Play();
         Destroy(GetComponent<Collider2D>());
         Destroy(this.gameObject, 2.3f);
+        _spawnManager.EnemyKilled();
     }
 
     private void EnemyMovement()
@@ -116,6 +112,23 @@ public class Enemy : MonoBehaviour
         else if (transform.position.x > 11.1f)
         {
             transform.position = new Vector3(-11.1f, transform.position.y, 0);
+        }
+    }
+
+    private void EnemyFire()
+    {
+
+        if (Time.time > _canFire && _isEnemyDead == false)
+        {
+            _fireRate = Random.Range(4f, 7f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemyLaser = Instantiate(_enemyLasers, transform.position + new Vector3(-1.983f, -0.45f, 0), Quaternion.identity);
+            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
         }
     }
 }
