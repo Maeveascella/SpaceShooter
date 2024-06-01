@@ -9,10 +9,12 @@ public class GameManager : MonoBehaviour
     private bool _isGameOver = false;
     private bool _isWaveClear = false;
     private SpawnManager _spawnManager;
+    private UIManager _uiManager;
 
     private void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
 
     private void Update()

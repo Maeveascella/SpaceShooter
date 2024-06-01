@@ -23,6 +23,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private Text _waveText;
+    [SerializeField]
+    private Text _newWaveText;
+    [SerializeField]
+    private Text _clearedWaveText;
+    private bool _isWaveCleared = false;
 
     [SerializeField]
     private GameManager _gameManager;
@@ -89,11 +94,30 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void WaveCleared()
+    {
+        _isWaveCleared = true;
+        StartCoroutine(NewWaveFlicker());
+        _clearedWaveText.gameObject.SetActive(true);
+    }
+
     public void UpdateWave(int currentwave)
     {
+        _isWaveCleared = false;
+        _clearedWaveText.gameObject.SetActive(false);
         _waveText.text = "Wave: " + currentwave;ToString();
     }
 
+    private IEnumerator NewWaveFlicker()
+    {
+        while (_isWaveCleared == true)
+        {
+            _newWaveText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+            _newWaveText.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
     public void UpdateShield(int shieldLives)
     {
         switch (shieldLives)

@@ -27,6 +27,9 @@ public class SpawnManager : MonoBehaviour
     private GameObject _LifeUp;
 
     private GameManager _gameManager;
+    private UIManager _uiManager;
+
+    private int _waveNumber = 1;
 
     
 
@@ -40,18 +43,10 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
 
-    private void Update()
-    {
-        if (_enemiesKilled == _toClear)
-        {
-            WaveClear();
-            _gameManager.WaveClear();
-        }
-    }
-
-    public void StartSpawning()
+     public void StartSpawning()
     {
         StartCoroutine(EnemySpawnRoutine());
         StartCoroutine(PowerupSpawnRoutine());
@@ -135,6 +130,7 @@ public class SpawnManager : MonoBehaviour
     void WaveClear()
     {
         isWaveClear = true;
+        _uiManager.WaveCleared();
         StopAllCoroutines();
     }
 
@@ -146,6 +142,11 @@ public class SpawnManager : MonoBehaviour
     public void EnemyKilled()
     {
         _enemiesKilled++;
+        if (_enemiesKilled == _toClear)
+        {
+            WaveClear();
+            _gameManager.WaveClear(); ;
+        }
     }
 
     public void NewWave()
@@ -154,6 +155,8 @@ public class SpawnManager : MonoBehaviour
         _spawnCount = 0;
         _enemiesKilled = 0;
         _toClear++;
+        _waveNumber++;
+        _uiManager.UpdateWave(_waveNumber);
         isWaveClear = false;
     }
 
