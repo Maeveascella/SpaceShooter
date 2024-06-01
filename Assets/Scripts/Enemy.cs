@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     private bool _isEnemyDead = false;
     private SpawnManager _spawnManager;
 
+    private bool _willReflect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +50,7 @@ public class Enemy : MonoBehaviour
             Debug.LogError("Spawn Manager Not found");
         }
 
-        _randomX = Random.Range(-.5f, .5f);
+        _randomX = Random.Range(-.6f, .6f);
     }
 
     // Update is called once per frame
@@ -97,8 +99,12 @@ public class Enemy : MonoBehaviour
     {
 
         transform.Translate(new Vector3 ((_randomX), -1, 0) * _speed * Time.deltaTime);
-
-
+        _willReflect = Random.value < .4 * Time.deltaTime;
+        if (_willReflect == true)
+        {
+            _randomX = _randomX * -1;
+        }
+ 
         if (transform.position.y <= -6.5f)
         {
             //float RandomX = Random.Range (-10.5f, 10.5f)
