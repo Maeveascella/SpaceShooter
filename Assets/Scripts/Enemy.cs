@@ -16,12 +16,15 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private GameObject _enemyLasers;
+    [SerializeField]
+    private GameObject _enemyShield;
     private float _fireRate;
     private float _canFire = -1f;
     private bool _isEnemyDead = false;
     private SpawnManager _spawnManager;
 
     private bool _willReflect;
+    private bool _hasShield;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +54,12 @@ public class Enemy : MonoBehaviour
         }
 
         _randomX = Random.Range(-.6f, .6f);
+
+        _hasShield = Random.value < 1;
+        if (_hasShield == true)
+        {
+            _enemyShield.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -69,7 +78,16 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-            EnemyDeath();
+
+            if (_hasShield == true)
+            {
+                _hasShield = false;
+                _enemyShield.SetActive(false);
+            }
+            else
+            {
+                EnemyDeath();
+            }
             
         }
 
@@ -80,7 +98,16 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddScore(10);
             }
-            EnemyDeath();
+
+            if (_hasShield == true)
+            {
+                _hasShield = false;
+                _enemyShield.SetActive(false);
+            }
+            else
+            {
+                EnemyDeath();
+            }
         }
     }
 
@@ -91,8 +118,8 @@ public class Enemy : MonoBehaviour
         _speed = 0;
         _explodeAudio.Play();
         Destroy(GetComponent<Collider2D>());
-        Destroy(this.gameObject, 2.3f);
         _spawnManager.EnemyKilled();
+        Destroy(this.gameObject, 2.3f);
     }
 
     private void EnemyMovement()
@@ -137,4 +164,5 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
 }

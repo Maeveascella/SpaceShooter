@@ -45,5 +45,6 @@ public class GameManager : MonoBehaviour
     public void WaveClear()
     {
         _isWaveClear=true;
+        _uiManager.WaveCleared();
     }
 }

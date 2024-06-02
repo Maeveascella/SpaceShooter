@@ -5,23 +5,24 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _ExplosionPrefab;
+    private GameObject _explosionPrefab;
     private SpawnManager _spawnmanager;
 
-    private AudioSource _ExplosionAudio;
+    private AudioSource _explosionAudio
+        ;
 
     // Start is called before the first frame update
     void Start()
     {
         _spawnmanager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        _ExplosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+        _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
 
         if (_spawnmanager == null)
         {
             Debug.LogError("Spawn Manager Not Found");
         }
 
-        if (_ExplosionAudio == null)
+        if (_explosionAudio == null)
         {
             Debug.LogError("Explosion Audio Not Found");
         }
@@ -39,10 +40,10 @@ public class Asteroid : MonoBehaviour
     {
         if (other.tag == "Laser")
         {
-            Instantiate(_ExplosionPrefab, transform.position, Quaternion.identity);
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             _spawnmanager.StartSpawning();
-            _ExplosionAudio.Play();
+            _explosionAudio.Play();
             Destroy(this.gameObject, 0.1f);
         }
     }
