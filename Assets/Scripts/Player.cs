@@ -274,5 +274,11 @@ public class Player : MonoBehaviour
                 break;
         }
     }
+    
+    public void ReduceBoost()
+    {
+        _thrusterFuel = _thrusterFuel *.5f;
+        _uiManager.UpdateBoost((int)_thrusterFuel);
+    }
 
 }

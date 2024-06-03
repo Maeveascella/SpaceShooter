@@ -7,6 +7,8 @@ public class EnemyType2 : MonoBehaviour
     private float _speed = 2.5f;
     [SerializeField]
     private GameObject _enemyLaserPrefab;
+    [SerializeField]
+    private GameObject _spreadShotPrefab;
 
     private float _randomX;
     private float _fireRate;
@@ -18,6 +20,8 @@ public class EnemyType2 : MonoBehaviour
     private AudioSource _explosionAudio;
     [SerializeField]
     private GameObject _explosionPrefab;
+    [SerializeField]
+    private bool _spreadShotisReady;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +31,7 @@ public class EnemyType2 : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+        StartCoroutine(SpreadShotTimer());
     }
 
     // Update is called once per frame
@@ -54,9 +59,22 @@ public class EnemyType2 : MonoBehaviour
     private void GunnerFire()
     {
 
-        if (Time.time > _canFire && _isEnemyDead == false)
+        if (Time.time > _canFire && _isEnemyDead == false && _spreadShotisReady == true)
         {
-            _fireRate = Random.Range(1f, 3f);
+            _fireRate = 1f;
+            _canFire = Time.time + _fireRate;
+            GameObject spreadShot = Instantiate(_spreadShotPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+            _spreadShotisReady = false;
+            Laser[] lasers = spreadShot.GetComponentsInChildren<Laser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+        }
+        else if (Time.time > _canFire && _isEnemyDead == false)
+        {
+            _fireRate = 1f;
             _canFire = Time.time + _fireRate;
             GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position + new Vector3(0, -1.5f, 0), Quaternion.identity);
             Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
@@ -86,6 +104,15 @@ public class EnemyType2 : MonoBehaviour
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
         Destroy(GetComponent<Collider2D>());
         Destroy(this.gameObject, .1f);
+    }
+
+    private IEnumerator SpreadShotTimer()
+    {
+        while (_isEnemyDead == false)
+        {
+            yield return new WaitForSeconds(3f);
+            _spreadShotisReady = true;
+        }
     }
 
 }

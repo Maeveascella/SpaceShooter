@@ -53,6 +53,9 @@ public class Powerup : MonoBehaviour
                         player.ShieldActivated();
                         break;
                     case 3:
+                        player.ReduceBoost();
+                        break;
+                    case 4:
                         player.BurstFire();
                         break;
                 }

@@ -80,7 +80,7 @@ public class SpawnManager : MonoBehaviour
 
             float powerupSpawnrate = Random.Range(3f, 7f);
             Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
-            int randomPowerup = Random.Range(0, 3);
+            int randomPowerup = Random.Range(0, 4);
             GameObject newPowerup = Instantiate(Powerups[randomPowerup], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(powerupSpawnrate);
         }
@@ -120,7 +120,7 @@ public class SpawnManager : MonoBehaviour
 
             float _rapidFirespawnrate = Random.Range(20f, 25f);
             Vector3 PosToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
-            GameObject newPowerup = Instantiate(Powerups[3], PosToSpawn, Quaternion.identity);
+            GameObject newPowerup = Instantiate(Powerups[4], PosToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(_rapidFirespawnrate);
         }
     }
