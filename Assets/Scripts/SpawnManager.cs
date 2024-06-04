@@ -20,6 +20,8 @@ public class SpawnManager : MonoBehaviour
     private int _spawnCount;
     [SerializeField]
     private GameObject _gunnerPrefab;
+    [SerializeField]
+    private GameObject _aggressivePrefab;
 
     [SerializeField]
     private GameObject[] Powerups;
@@ -56,6 +58,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(LifeUpSpawnRoutine());
         StartCoroutine(RapidFireSpawnRoutine());
         StartCoroutine(GunnerSpawnRoutine());
+        StartCoroutine(AggressiveEnemyRoutine());
     }
 
 
@@ -64,7 +67,7 @@ public class SpawnManager : MonoBehaviour
         while (isPlayerDead == false && _spawnCount < _toClear)
         {
             yield return new WaitForSeconds(2.5f);
-            _spawnCount++;
+            UpdateSpawnCount();
             Vector3 postospawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
             GameObject newEnemy = Instantiate(_enemyPrefab, postospawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
@@ -130,12 +133,24 @@ public class SpawnManager : MonoBehaviour
         while(isPlayerDead == false && _spawnCount < _toClear)
         {
             yield return new WaitForSeconds(Random.Range(5f, 10f));
-            _spawnCount++;
+            UpdateSpawnCount();
             Vector3 posToSpawn = new Vector3(Random.Range(-7.5f, 7.5f), 7.5f, 0);
             Instantiate(_gunnerPrefab, posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(5f, 10f));
         }
 
+    }
+
+    private IEnumerator AggressiveEnemyRoutine()
+    {
+        while(isPlayerDead == false && _spawnCount < _toClear)
+        {
+            yield return new WaitForSeconds(20f);
+            UpdateSpawnCount();
+            Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
+            Instantiate(_aggressivePrefab, posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(10f, 15f));
+        }
     }
     
     public void PlayerDeath()
@@ -170,5 +185,20 @@ public class SpawnManager : MonoBehaviour
         _uiManager.UpdateWave(_waveNumber);
         isWaveClear = false;
     }
+
+    private void UpdateSpawnCount()
+    {
+        if (_spawnCount >= _toClear)
+        {
+            StopCoroutine(EnemySpawnRoutine());
+            StopCoroutine(AggressiveEnemyRoutine());
+            StopCoroutine(GunnerSpawnRoutine());
+        }
+        else if (_spawnCount < _toClear)
+        {
+            _spawnCount++;
+        }
+    }
+    
 
 }

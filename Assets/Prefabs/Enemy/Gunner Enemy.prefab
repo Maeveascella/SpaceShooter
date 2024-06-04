@@ -143,9 +143,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8191290276008937157}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f048311e7f66b84bb9bfa01a1c8bb62, type: 3}
+  m_Script: {fileID: 11500000, guid: f1643841ca1a7bc49836f292ea81e983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyLaserPrefab: {fileID: 2697294904264439224, guid: 2785e32182e63c546be35d9a4e8ac3e2, type: 3}
   _spreadShotPrefab: {fileID: 3603824998895564555, guid: 0c9da9eb27eccab4fa3ae095d57906a3, type: 3}
   _explosionPrefab: {fileID: 4459018224749608772, guid: ba8c3775743a00042b20ae48df875325, type: 3}
+  _spreadShotisReady: 0

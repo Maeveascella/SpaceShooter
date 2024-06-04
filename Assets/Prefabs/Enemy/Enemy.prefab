@@ -46,10 +46,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5228658367802619428}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d741bc103000ff40ba59a9c81b06cc3, type: 3}
+  m_Script: {fileID: 11500000, guid: 926e390491cc1e84faa7bf928ec5a7e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3.5
+  _speed: 4
   _anim: {fileID: 0}
   _enemyLasers: {fileID: 5690295749699420823, guid: 3d8d935c57470e64dac0bf7126d483f3, type: 3}
   _enemyShield: {fileID: 7552087454813739676}
