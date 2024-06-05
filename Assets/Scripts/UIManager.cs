@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Text _ScoreText;
+    private Text _scoreText;
     [SerializeField]
-    private Sprite[] _LiveSprites;
+    private Sprite[] _liveSprites;
     [SerializeField]
-    private Image _LivesImage;
+    private Image _livesImage;
     [SerializeField]
-    private Text _GameOver;
+    private Text _gameOver;
     private bool _isplayerdead = false;
     [SerializeField]
-    private Text _RestartText;
+    private Text _restartText;
     [SerializeField]
     private Slider _fuelSlider;
     [SerializeField]
@@ -32,19 +32,19 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameManager _gameManager;
     [SerializeField]
-    private Text _AmmoText;
+    private Text _ammoText;
 
     [SerializeField]
-    private GameObject[] _Shields;
+    private GameObject[] _shields;
 
     
 
     // Start is called before the first frame update
     void Start()
     {
-        _ScoreText.text = "Score: " + 0;
-        _GameOver.gameObject.SetActive(false);
-        _RestartText.gameObject.SetActive(false);
+        _scoreText.text = "Score: " + 0;
+        _gameOver.gameObject.SetActive(false);
+        _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
         if (_gameManager == null)
@@ -55,17 +55,17 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScore(int playerScore)
     {
-        _ScoreText.text = "Score: " + playerScore;ToString();
+        _scoreText.text = "Score: " + playerScore;ToString();
     }
     
     public void UpdateLives(int currentLives)
     {
-        _LivesImage.sprite = _LiveSprites[currentLives];
+        _livesImage.sprite = _liveSprites[currentLives];
     }
 
     public void UpdateAmmo(int currentAmmo)
     {
-        _AmmoText.text = "Ammo: " + currentAmmo;ToString();
+        _ammoText.text = "Ammo: " + currentAmmo;ToString();
     }
 
     public void UpdateBoost(int currentBoost)
@@ -78,7 +78,7 @@ public class UIManager : MonoBehaviour
     {
         _isplayerdead = true;
         StartCoroutine(Gameoverflicker());
-        _RestartText.gameObject.SetActive(true);
+        _restartText.gameObject.SetActive(true);
         _gameManager.Gameover();
     }
 
@@ -86,9 +86,9 @@ public class UIManager : MonoBehaviour
     {
         while (_isplayerdead == true)
         {
-            _GameOver.gameObject.SetActive(true);
+            _gameOver.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.5f);
-            _GameOver.gameObject.SetActive(false);
+            _gameOver.gameObject.SetActive(false);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -98,7 +98,6 @@ public class UIManager : MonoBehaviour
     {
         _isWaveCleared = true;
         StartCoroutine(NewWaveFlicker());
-        _clearedWaveText.gameObject.SetActive(true);
     }
 
     public void UpdateWave(int currentwave)
@@ -112,6 +111,7 @@ public class UIManager : MonoBehaviour
     {
         while (_isWaveCleared == true)
         {
+            _clearedWaveText.gameObject.SetActive(true);
             _newWaveText.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.5f);
             _newWaveText.gameObject.SetActive(false);
@@ -123,18 +123,18 @@ public class UIManager : MonoBehaviour
         switch (shieldLives)
         {
             case 0:
-                _Shields[1].SetActive(false);
+                _shields[1].SetActive(false);
                 break;
             case 1:
-                _Shields[2].SetActive(false);
+                _shields[2].SetActive(false);
                 break;
             case 2:
-                _Shields[3].SetActive(false);
+                _shields[3].SetActive(false);
                 break;
             case 3:
-                _Shields[1].SetActive(true);
-                _Shields[2].SetActive(true);
-                _Shields[3].SetActive(true);
+                _shields[1].SetActive(true);
+                _shields[2].SetActive(true);
+                _shields[3].SetActive(true);
                 break;
         }
     }

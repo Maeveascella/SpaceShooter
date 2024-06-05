@@ -12,27 +12,29 @@ public class Powerup : MonoBehaviour
     //2 = shield
 
     private AudioSource _powerupAudio;
+    [SerializeField]
+    private bool _playerMagnetActive = false;
+    private Transform _playerPos;
+    private Player _player;
 
     // Start is called before the first frame update
     void Start()
     {
         _powerupAudio = GameObject.Find("Powerup_Sound").GetComponent<AudioSource>();
+        _player = GameObject.Find("Player").GetComponent<Player>();
 
         if (_powerupAudio == null)
         {
             Debug.LogError("Powerup Audio Not Found");
         }
+
+        _playerPos = GameObject.Find("Player").GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * _powerUpSpeed * Time.deltaTime);
-
-        if (transform.position.y <= -6.5f)
-        {
-            Destroy(this.gameObject);
-        }
+        Movement();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -60,6 +62,29 @@ public class Powerup : MonoBehaviour
                         break;
                 }
             _powerupAudio.Play();
+            Destroy(this.gameObject);
+        }
+    }
+
+    public void PlayerMagnet()
+    {
+        
+        _playerMagnetActive = true;
+    }
+
+    void Movement()
+    {
+        if (_playerMagnetActive == true)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _playerPos.position, 8f * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.down * _powerUpSpeed * Time.deltaTime);
+        }
+
+        if (transform.position.y <= -6.5f)
+        {
             Destroy(this.gameObject);
         }
     }

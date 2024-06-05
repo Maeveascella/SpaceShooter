@@ -6,51 +6,31 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 4f;
-    [SerializeField]
-    private float _boostMultiplier = 1.5f;
-    private float _thrusterFuel = 100f;
-    private float _boostRecharge;
+    private float _speed = 4f, _firerate = 0.5f;
+    private float _boostRecharge, _boostMultiplier = 1.5f, _thrusterFuel = 100f, _nextfire = -1f, _speedCountdown = 5f, _tripleShotCounter = 5f;
 
     [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private float _firerate = 0.5f;
-    private float _nextfire = -1f;
-    private int _ammo = 6;
+    private GameObject _laserPrefab, _tripleshotPrefab, _shieldPrefab, _leftEngine, _rightEngine, _thruster;
+
+    private int _ammo = 6, _lives = 3, _score = 0, _MagnetUses = 1;
+
     private bool _isBurstFireActive = false;
-
-    [SerializeField]
-    private int _lives = 3;
-    private SpawnManager _spawnManager;
-
-    [SerializeField]
     private bool _isTripleShotActive = false;
-    [SerializeField]
-    private GameObject _TripleshotPrefab;
-    [SerializeField]
-    private float _TripleShotCounter = 5f;
-
-    [SerializeField]
-    private float _SpeedCountdown = 5f;
-    
-
     private bool _isShieldActive = false;
-    [SerializeField]
-    private GameObject _ShieldPrefab;
-    private ShieldScript _shield;
 
-    [SerializeField]
-    private int _Score = 0;
     private UIManager _uiManager;
-
-    [SerializeField]
-    private GameObject _Left_Engine, _Right_Engine, _thruster;
-
-    private AudioSource _audioSource;
-    private AudioSource _ExplodeAudio;
-
+    private ShieldScript _shield;
+    private AudioSource _audioSource, _explodeAudio;
+    private SpawnManager _spawnManager;
     private Animator _cameraShake;
+    private GameObject[] _powerUps;
+    private GameObject _ammoCollectible, _lifeCollectible;
+
+    private Powerup _basicPowerups;
+    private Ammo _ammoPickup;
+    private Life _lifePickup;
+    private EnemyType2 _gunnerEnemy;
+
 
     // Start is called before the first frame update
     void Start()
@@ -59,10 +39,11 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         transform.position = new Vector3(0, 0, 0);
         _audioSource = GetComponent<AudioSource>();
-        _ExplodeAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+        _explodeAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
         _shield = GameObject.Find("Shield").GetComponent<ShieldScript>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<Animator>();
-        
+        _gunnerEnemy = GameObject.Find("Gunner Enemy").GetComponent<EnemyType2>();
+
 
         if (_spawnManager == null)
         { 
@@ -79,7 +60,7 @@ public class Player : MonoBehaviour
             Debug.LogError("Player Audio Not Found");
         }
 
-        if (_ExplodeAudio == null)
+        if (_explodeAudio == null)
         {
             Debug.LogError("Explode Audio Not Found");
         }
@@ -89,6 +70,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            PowerUpMagnet();
+        }
 
         if(Input.GetKey(KeyCode.Space) && Time.time > _nextfire &&_isBurstFireActive == true)
         {
@@ -151,14 +137,14 @@ public class Player : MonoBehaviour
 
         if (_isTripleShotActive == true)
         {
-            Instantiate(_TripleshotPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
+            Instantiate(_tripleshotPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
         }
         else
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
         }
         _audioSource.Play();
-        
+        _gunnerEnemy.AlertShot();
     }
 
     public void Damage()
@@ -179,7 +165,7 @@ public class Player : MonoBehaviour
         {
             _spawnManager.PlayerDeath();
             _uiManager.PlayerDeath();
-            _ExplodeAudio.Play();
+            _explodeAudio.Play();
             Destroy(this.gameObject);
         }
     }
@@ -192,7 +178,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator TripleShotCountdown()
     {
-        yield return new WaitForSeconds(_TripleShotCounter);
+        yield return new WaitForSeconds(_tripleShotCounter);
         _isTripleShotActive = false;
     }
 
@@ -204,7 +190,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator SpeedCountdown()
     {
-        yield return new WaitForSeconds(_SpeedCountdown);
+        yield return new WaitForSeconds(_speedCountdown);
         _speed = 4f;
     }
 
@@ -221,8 +207,8 @@ public class Player : MonoBehaviour
 
     public void AddScore(int points)
     {
-        _Score = _Score + points;
-        _uiManager.UpdateScore(_Score);
+        _score = _score + points;
+        _uiManager.UpdateScore(_score);
     }
 
     public void AddAmmo(int ammo)
@@ -263,14 +249,14 @@ public class Player : MonoBehaviour
         switch (_lives)
         {
             case 1:
-                _Right_Engine.SetActive(true);
+                _rightEngine.SetActive(true);
                 break;
             case 2:
-                _Left_Engine.SetActive(true);
-                _Right_Engine.SetActive(false);
+                _leftEngine.SetActive(true);
+                _rightEngine.SetActive(false);
                 break;
             case 3:
-                _Left_Engine.SetActive(false);
+                _leftEngine.SetActive(false);
                 break;
         }
     }
@@ -281,4 +267,32 @@ public class Player : MonoBehaviour
         _uiManager.UpdateBoost((int)_thrusterFuel);
     }
 
+    private void PowerUpMagnet()
+    {
+        _powerUps = GameObject.FindGameObjectsWithTag("Powerup");
+        _ammoCollectible = GameObject.FindGameObjectWithTag("AmmoCollectible");
+        _lifeCollectible = GameObject.FindGameObjectWithTag("LifeCollectible");
+
+        if (_powerUps != null )
+        {
+            for(int i = 0; i < _powerUps.Length; i++)
+            {
+                _basicPowerups = _powerUps[i].GetComponent<Powerup>();
+                _basicPowerups.PlayerMagnet();
+            }
+        }
+
+        if (_ammoCollectible != null )
+        {
+            _ammoPickup = _ammoCollectible.GetComponent<Ammo>();
+            _ammoPickup.PlayerMagnet();
+        }
+
+        if ( _lifeCollectible != null )
+        {
+            _lifePickup = _lifeCollectible.GetComponent<Life>();
+            _lifePickup.PlayerMagnet();
+        }
+    }
 }
+

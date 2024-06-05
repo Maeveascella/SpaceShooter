@@ -22,11 +22,15 @@ public class EnemyType2 : MonoBehaviour
     private GameObject _explosionPrefab;
     [SerializeField]
     private bool _spreadShotisReady;
+    [SerializeField]
+    private bool _willDodge;
+    private float _dodgeDistance;
 
     // Start is called before the first frame update
     void Start()
     {
         _randomX = Random.Range(-1, 2);
+        _dodgeDistance = Random.Range(-4, 4f);
 
         _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
@@ -128,6 +132,25 @@ public class EnemyType2 : MonoBehaviour
         {
             yield return new WaitForSeconds(3f);
             _spreadShotisReady = true;
+        }
+    }
+
+    public void AlertShot()
+    {
+        _willDodge = Random.value < .8f;
+        if (_willDodge)
+        {
+            StartCoroutine(DodgeChance());
+        }
+    }
+
+    private IEnumerator DodgeChance()
+    {
+        while (_willDodge == true)
+        {
+            transform.Translate(new Vector3(_dodgeDistance, 0, 0) * 20f * Time.deltaTime);
+            yield return new WaitForSeconds(.5f);
+            _willDodge = false;
         }
     }
 

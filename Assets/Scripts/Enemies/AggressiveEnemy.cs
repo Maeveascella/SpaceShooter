@@ -6,7 +6,7 @@ public class AggressiveEnemy : MonoBehaviour
 {
     private Player _player;
     private Transform _playerPos;
-    private float _speed = 3f;
+    private float _speed = 4f;
     private SpawnManager _spawnManager;
     [SerializeField]   
     private AudioSource _explosionAudio;
@@ -31,7 +31,10 @@ public class AggressiveEnemy : MonoBehaviour
     {
         if (transform.position.y >= _playerPos.position.y)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _playerPos.position, _speed * Time.deltaTime);
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            Vector3 dir = transform.position - _playerPos.position;
+            float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg * .5f;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
         }
         else if (transform.position.y <= _playerPos.position.y)
         {
@@ -43,6 +46,7 @@ public class AggressiveEnemy : MonoBehaviour
             //float RandomX = Random.Range (-10.5f, 10.5f)
             transform.position = new Vector3(Random.Range(-10.5f, 10.5f), 8.5f, 0);
         }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)

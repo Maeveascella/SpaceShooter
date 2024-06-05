@@ -18,10 +18,14 @@ public class SpawnManager : MonoBehaviour
     private int _toClear = 3;
     [SerializeField]
     private int _spawnCount;
+
+
     [SerializeField]
     private GameObject _gunnerPrefab;
     [SerializeField]
     private GameObject _aggressivePrefab;
+    [SerializeField]
+    private GameObject _smartEnemyPrefab;
 
     [SerializeField]
     private GameObject[] Powerups;
@@ -59,6 +63,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(RapidFireSpawnRoutine());
         StartCoroutine(GunnerSpawnRoutine());
         StartCoroutine(AggressiveEnemyRoutine());
+        StartCoroutine(SmartEnemyRoutine());
     }
 
 
@@ -68,8 +73,8 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2.5f);
             UpdateSpawnCount();
-            Vector3 postospawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
-            GameObject newEnemy = Instantiate(_enemyPrefab, postospawn, Quaternion.identity);
+            Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
+            GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(_spawnrate);
         }
@@ -95,10 +100,10 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(5f);
 
-            float _ammoSpawnrate = Random.Range(5f, 10f);
-            Vector3 PosToSpawn = new Vector3(Random.Range(-7.5f, 7.5f), 8f, 0);
-            Instantiate(_ammo, PosToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(_ammoSpawnrate);
+            float ammoSpawnrate = Random.Range(5f, 10f);
+            Vector3 posToSpawn = new Vector3(Random.Range(-7.5f, 7.5f), 8f, 0);
+            Instantiate(_ammo, posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(ammoSpawnrate);
         }
     }
 
@@ -108,10 +113,10 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(25f, 40f));
 
-            float _lifeUPspawnrate = Random.Range(25, 40f);
-            Vector3 PosTospawn = new Vector3(Random.Range(-8f, 8f), Random.Range(-3.8f, 0), 0);
-            Instantiate(_lifeUp, PosTospawn, Quaternion.identity);
-            yield return new WaitForSeconds(_lifeUPspawnrate);
+            float LifeUpSpawnrate = Random.Range(25, 40f);
+            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), Random.Range(-3.8f, 0), 0);
+            Instantiate(_lifeUp, posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(LifeUpSpawnrate);
         }
     }
 
@@ -121,10 +126,10 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(20f, 25f));
 
-            float _rapidFirespawnrate = Random.Range(20f, 25f);
-            Vector3 PosToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
-            GameObject newPowerup = Instantiate(Powerups[4], PosToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(_rapidFirespawnrate);
+            float rapidFireSpawnRate = Random.Range(20f, 25f);
+            Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
+            GameObject newPowerup = Instantiate(Powerups[4], posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(rapidFireSpawnRate);
         }
     }
 
@@ -132,7 +137,7 @@ public class SpawnManager : MonoBehaviour
     {
         while(isPlayerDead == false && _spawnCount < _toClear)
         {
-            yield return new WaitForSeconds(Random.Range(5f, 10f));
+            yield return new WaitForSeconds(Random.Range(20f, 35f));
             UpdateSpawnCount();
             Vector3 posToSpawn = new Vector3(Random.Range(-7.5f, 7.5f), 7.5f, 0);
             Instantiate(_gunnerPrefab, posToSpawn, Quaternion.identity);
@@ -145,14 +150,26 @@ public class SpawnManager : MonoBehaviour
     {
         while(isPlayerDead == false && _spawnCount < _toClear)
         {
-            yield return new WaitForSeconds(20f);
+            yield return new WaitForSeconds(10f);
             UpdateSpawnCount();
             Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
             Instantiate(_aggressivePrefab, posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(10f, 15f));
         }
     }
-    
+
+    private IEnumerator SmartEnemyRoutine()
+    {
+        while (isPlayerDead == false && _spawnCount < _toClear)
+        {
+            yield return new WaitForSeconds(20f);
+            UpdateSpawnCount();
+            Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
+            Instantiate(_smartEnemyPrefab, posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(10f, 15f));
+        }
+    }
+
     public void PlayerDeath()
     {
         isPlayerDead = true;
@@ -193,8 +210,9 @@ public class SpawnManager : MonoBehaviour
             StopCoroutine(EnemySpawnRoutine());
             StopCoroutine(AggressiveEnemyRoutine());
             StopCoroutine(GunnerSpawnRoutine());
+            StopCoroutine(SmartEnemyRoutine());
         }
-        else if (_spawnCount < _toClear)
+        else
         {
             _spawnCount++;
         }
