@@ -17,7 +17,8 @@ public class Player : MonoBehaviour
     private bool _isBurstFireActive = false;
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
-
+    [SerializeField]
+    private bool _homingLaserIsActive = false;
     private UIManager _uiManager;
     private ShieldScript _shield;
     private AudioSource _audioSource, _explodeAudio;
@@ -80,7 +81,11 @@ public class Player : MonoBehaviour
         {
             Firelaser();
         }
-        if(Input.GetKeyDown(KeyCode.Space) && Time.time > _nextfire && _ammo >= 1)
+        else if(Input.GetKeyDown(KeyCode.Space) && Time.time > _nextfire && _homingLaserIsActive == true)
+        {
+            FireHomingLaser();
+        }
+        else if(Input.GetKeyDown(KeyCode.Space) && Time.time > _nextfire && _ammo >= 1)
         {
             Firelaser();
             _ammo = _ammo - 1;
@@ -145,6 +150,14 @@ public class Player : MonoBehaviour
         }
         _audioSource.Play();
         _gunnerEnemy.AlertShot();
+    }
+
+    void FireHomingLaser()
+    {
+        _nextfire = Time.time + _firerate;
+        Laser laser = _laserPrefab.GetComponent<Laser>();
+        Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
+        laser.AssignHomingLaser();
     }
 
     public void Damage()

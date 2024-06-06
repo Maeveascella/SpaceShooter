@@ -18,6 +18,7 @@ public class EnemyType2 : MonoBehaviour
     private Player _player;
     private SpawnManager _spawnManager;
     private AudioSource _explosionAudio;
+    private Transform _playerPos;
     [SerializeField]
     private GameObject _explosionPrefab;
     [SerializeField]
@@ -35,6 +36,7 @@ public class EnemyType2 : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+        _playerPos = GameObject.Find("Player").GetComponent<Transform>();
         StartCoroutine(SpreadShotTimer());
 
         if(_player == null)
@@ -57,7 +59,7 @@ public class EnemyType2 : MonoBehaviour
     void Update()
     {
         GunnerMovement();
-        GunnerFire();
+        //GunnerFire();
     }
 
     void GunnerMovement()
@@ -137,9 +139,17 @@ public class EnemyType2 : MonoBehaviour
 
     public void AlertShot()
     {
-        _willDodge = Random.value < .8f;
-        if (_willDodge)
+        float xDistance = _playerPos.position.x - transform.position.x;
+        if(xDistance <= 2)
         {
+            _willDodge = Random.value < 1f;
+        }
+        if (_willDodge == true)
+        {
+            float lowrange = Random.Range(-3, -2f);
+            float highrange = Random.Range(2, 3f);
+            _speed = _speed * 2;
+            _randomX = _randomX + Random.Range(lowrange, highrange);
             StartCoroutine(DodgeChance());
         }
     }
@@ -148,10 +158,12 @@ public class EnemyType2 : MonoBehaviour
     {
         while (_willDodge == true)
         {
-            transform.Translate(new Vector3(_dodgeDistance, 0, 0) * 20f * Time.deltaTime);
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.3f);
+            _randomX = Random.Range(-1, 2);
+            _speed = _speed * .5f;
             _willDodge = false;
         }
+        
     }
 
 }

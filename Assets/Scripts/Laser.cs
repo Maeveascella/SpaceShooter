@@ -7,19 +7,27 @@ public class Laser : MonoBehaviour
     private float _speed = 8f;
 
     private bool _isEnemyLaser = false;
+    [SerializeField]
+    private bool _isHomingLaser = false;
+
+    private Transform _enemyPos;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        _enemyPos = GameObject.FindWithTag("Enemy").GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_isEnemyLaser == false)
+        if (_isEnemyLaser == false && _isHomingLaser == false)
         {
             MoveUp();
+        }
+        else if (_isHomingLaser == true)
+        {
+            HomingMove();
         }
         else
         {
@@ -61,9 +69,19 @@ public class Laser : MonoBehaviour
         }
     }
 
+    void HomingMove()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, _enemyPos.position, _speed * Time.deltaTime);
+    }
+
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
+    }
+
+    public void AssignHomingLaser()
+    {
+        _isHomingLaser = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
