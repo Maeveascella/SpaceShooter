@@ -10,6 +10,9 @@ public class Powerup : MonoBehaviour
     //0 = TripleShot
     //1 = speed
     //2 = shield
+    //3 = ReduceBoost
+    //4 = HomingLaser
+    //5 = BurstFire
 
     private AudioSource _powerupAudio;
     [SerializeField]
@@ -58,6 +61,9 @@ public class Powerup : MonoBehaviour
                         player.ReduceBoost();
                         break;
                     case 4:
+                        player.HomingLaser();
+                        break;
+                    case 5:
                         player.BurstFire();
                         break;
                 }

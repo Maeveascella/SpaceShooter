@@ -22,10 +22,12 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     private ShieldScript _shield;
     private AudioSource _audioSource, _explodeAudio;
+    private Laser _laserScript;
     private SpawnManager _spawnManager;
     private Animator _cameraShake;
     private GameObject[] _powerUps;
     private GameObject _ammoCollectible, _lifeCollectible;
+    private Transform _enemyPos;
 
     private Powerup _basicPowerups;
     private Ammo _ammoPickup;
@@ -44,6 +46,9 @@ public class Player : MonoBehaviour
         _shield = GameObject.Find("Shield").GetComponent<ShieldScript>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<Animator>();
         _gunnerEnemy = GameObject.Find("Gunner Enemy").GetComponent<EnemyType2>();
+        _laserScript = _laserPrefab.GetComponent<Laser>();
+        _enemyPos = GameObject.FindWithTag("Enemy").GetComponent<Transform>();
+
 
 
         if (_spawnManager == null)
@@ -80,10 +85,6 @@ public class Player : MonoBehaviour
         if(Input.GetKey(KeyCode.Space) && Time.time > _nextfire &&_isBurstFireActive == true)
         {
             Firelaser();
-        }
-        else if(Input.GetKeyDown(KeyCode.Space) && Time.time > _nextfire && _homingLaserIsActive == true)
-        {
-            FireHomingLaser();
         }
         else if(Input.GetKeyDown(KeyCode.Space) && Time.time > _nextfire && _ammo >= 1)
         {
@@ -144,20 +145,27 @@ public class Player : MonoBehaviour
         {
             Instantiate(_tripleshotPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
         }
+
         else
         {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
-        }
-        _audioSource.Play();
-        _gunnerEnemy.AlertShot();
-    }
+            GameObject homingLaser = Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
+            if(_homingLaserIsActive == true)
+            {
+                Laser[] lasers = homingLaser.GetComponentsInChildren<Laser>();
 
-    void FireHomingLaser()
-    {
-        _nextfire = Time.time + _firerate;
-        Laser laser = _laserPrefab.GetComponent<Laser>();
-        Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.02f, 0), Quaternion.identity);
-        laser.AssignHomingLaser();
+                for (int i = 0; i < lasers.Length; i++)
+                {
+                    lasers[i].AssignHomingLaser();
+                }
+            }
+        }
+
+        
+        _audioSource.Play();
+        if (_gunnerEnemy != null)
+        {
+            _gunnerEnemy.AlertShot();
+        }
     }
 
     public void Damage()
@@ -305,6 +313,21 @@ public class Player : MonoBehaviour
         {
             _lifePickup = _lifeCollectible.GetComponent<Life>();
             _lifePickup.PlayerMagnet();
+        }
+    }
+
+    public void HomingLaser()
+    {
+        _homingLaserIsActive = true;
+        StartCoroutine(HomingLaserCountDown());
+    }
+
+    private IEnumerator HomingLaserCountDown()
+    {
+        while (_homingLaserIsActive == true)
+        {
+            yield return new WaitForSeconds(5f);
+            _homingLaserIsActive=false;
         }
     }
 }

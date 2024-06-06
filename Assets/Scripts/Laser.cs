@@ -10,24 +10,21 @@ public class Laser : MonoBehaviour
     [SerializeField]
     private bool _isHomingLaser = false;
 
+    private GameObject[] _enemiesSeen;
     private Transform _enemyPos;
+    private BoxCollider2D[] _enemyCollider;
 
     // Start is called before the first frame update
     void Start()
     {
-        _enemyPos = GameObject.FindWithTag("Enemy").GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_isEnemyLaser == false && _isHomingLaser == false)
+        if (_isEnemyLaser == false)
         {
             MoveUp();
-        }
-        else if (_isHomingLaser == true)
-        {
-            HomingMove();
         }
         else
         {
@@ -55,9 +52,27 @@ public class Laser : MonoBehaviour
 
     void MoveUp()
     {
-        //translate laser up 
-        transform.Translate(Vector3.up * _speed * Time.deltaTime);
-        //destroy laser at 7.5 y
+
+
+        if (_isHomingLaser == true)
+        {
+            _enemiesSeen = GameObject.FindGameObjectsWithTag("Enemy");
+            for (int i = 0; i < _enemiesSeen.Length; i++)
+            {
+                _enemyPos = _enemiesSeen[i].GetComponent<Transform>();
+            }
+
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            Vector3 dir = transform.position - _enemyPos.position;
+            float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
+        }
+        else
+        {
+            transform.Translate(Vector3.up * _speed * Time.deltaTime);
+        }
+
+
         if (transform.position.y >= 7.5f)
         {
             if (transform.parent != null)
@@ -69,14 +84,10 @@ public class Laser : MonoBehaviour
         }
     }
 
-    void HomingMove()
-    {
-        transform.position = Vector3.MoveTowards(transform.position, _enemyPos.position, _speed * Time.deltaTime);
-    }
-
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
+        transform.gameObject.tag = "EnemyLaser";
     }
 
     public void AssignHomingLaser()
@@ -101,6 +112,7 @@ public class Laser : MonoBehaviour
             Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
+
 
     }
 }

@@ -60,7 +60,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(PowerupSpawnRoutine());
         StartCoroutine(AmmoSpawnRoutine());
         StartCoroutine(LifeUpSpawnRoutine());
-        StartCoroutine(RapidFireSpawnRoutine());
+        StartCoroutine(RarePowerupSpawnRoutine());
         StartCoroutine(GunnerSpawnRoutine());
         StartCoroutine(AggressiveEnemyRoutine());
         StartCoroutine(SmartEnemyRoutine());
@@ -120,7 +120,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private IEnumerator RapidFireSpawnRoutine()
+    private IEnumerator RarePowerupSpawnRoutine()
     {
        while(isPlayerDead == false && isWaveClear == false)
         {
@@ -128,7 +128,8 @@ public class SpawnManager : MonoBehaviour
 
             float rapidFireSpawnRate = Random.Range(20f, 25f);
             Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
-            GameObject newPowerup = Instantiate(Powerups[4], posToSpawn, Quaternion.identity);
+            int randomRarePowerup = Random.Range(4, 6);
+            GameObject newPowerup = Instantiate(Powerups[randomRarePowerup], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(rapidFireSpawnRate);
         }
     }
@@ -216,6 +217,11 @@ public class SpawnManager : MonoBehaviour
         {
             _spawnCount++;
         }
+    }
+
+    public void WaveThreeBoss()
+    {
+
     }
     
 

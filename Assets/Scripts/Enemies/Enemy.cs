@@ -111,7 +111,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void EnemyDeath()
+    public void EnemyDeath()
     {
         _isEnemyDead = true;
         _anim.SetTrigger("OnEnemy Death");

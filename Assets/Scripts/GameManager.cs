@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     private bool _isWaveClear = false;
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
+    [SerializeField]
+    private int _waveCount = 1;
 
     private void Start()
     {
@@ -33,6 +35,9 @@ public class GameManager : MonoBehaviour
         {
             _spawnManager.NewWave();
             _spawnManager.StartSpawning();
+            _waveCount++;
+            if (_waveCount == 2)
+                _spawnManager.WaveThreeBoss();
             _isWaveClear=false;
         }
     }

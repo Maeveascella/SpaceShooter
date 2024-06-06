@@ -59,7 +59,7 @@ public class EnemyType2 : MonoBehaviour
     void Update()
     {
         GunnerMovement();
-        //GunnerFire();
+        GunnerFire();
     }
 
     void GunnerMovement()
@@ -82,7 +82,7 @@ public class EnemyType2 : MonoBehaviour
 
         if (Time.time > _canFire && _isEnemyDead == false && _spreadShotisReady == true)
         {
-            _fireRate = 1f;
+            _fireRate = 1.5f;
             _canFire = Time.time + _fireRate;
             GameObject spreadShot = Instantiate(_spreadShotPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
             _spreadShotisReady = false;
@@ -95,7 +95,7 @@ public class EnemyType2 : MonoBehaviour
         }
         else if (Time.time > _canFire && _isEnemyDead == false)
         {
-            _fireRate = 1f;
+            _fireRate = 1.5f;
             _canFire = Time.time + _fireRate;
             
             GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position + new Vector3(0, -1.5f, 0), Quaternion.identity);
@@ -137,20 +137,25 @@ public class EnemyType2 : MonoBehaviour
         }
     }
 
+    void EnemyDodge()
+    {
+            float lowRange = Random.Range(-3, -2f);
+            float highRange = Random.Range(2, 3f);
+            _speed = _speed * 2;
+            _randomX = _randomX + Random.Range(lowRange, highRange);
+            StartCoroutine(DodgeChance());
+    }
+
     public void AlertShot()
     {
-        float xDistance = _playerPos.position.x - transform.position.x;
-        if(xDistance <= 2)
+        float xDistance = Mathf.Abs(_playerPos.position.x - transform.position.x);
+        if (xDistance <= 1.8f)
         {
-            _willDodge = Random.value < 1f;
+            _willDodge = Random.value < .35f;
         }
         if (_willDodge == true)
         {
-            float lowrange = Random.Range(-3, -2f);
-            float highrange = Random.Range(2, 3f);
-            _speed = _speed * 2;
-            _randomX = _randomX + Random.Range(lowrange, highrange);
-            StartCoroutine(DodgeChance());
+            EnemyDodge();
         }
     }
 
