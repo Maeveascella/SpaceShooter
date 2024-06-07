@@ -149,7 +149,7 @@ public class EnemyType2 : MonoBehaviour
         float xDistance = Mathf.Abs(_playerPos.position.x - transform.position.x);
         if (xDistance <= 1.8f)
         {
-            _willDodge = Random.value < .35f;
+            _willDodge = Random.value < 1f;
         }
         if (_willDodge == true)
         {

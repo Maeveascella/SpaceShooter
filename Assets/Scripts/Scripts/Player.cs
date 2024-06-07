@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
         _explodeAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
         _shield = GameObject.Find("Shield").GetComponent<ShieldScript>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<Animator>();
-        _gunnerEnemy = GameObject.Find("Gunner Enemy").GetComponent<EnemyType2>();
 
 
 
@@ -157,7 +156,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        
+        _gunnerEnemy = GameObject.Find("Gunner Enemy").GetComponent<EnemyType2>();
         _audioSource.Play();
         if (_gunnerEnemy != null)
         {

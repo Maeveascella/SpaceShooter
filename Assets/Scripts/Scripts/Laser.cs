@@ -21,7 +21,6 @@ public class Laser : MonoBehaviour
     void Start()
     {
         _playerPos = GameObject.Find("Player").GetComponent<Transform>();
-        _playerTarget.position = _playerPos.position;
     }
 
     // Update is called once per frame
