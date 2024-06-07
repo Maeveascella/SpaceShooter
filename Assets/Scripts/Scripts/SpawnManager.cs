@@ -48,6 +48,8 @@ public class SpawnManager : MonoBehaviour
     private bool _isPlayerDead = false;
     [SerializeField]
     private bool _isWaveClear = false;
+    [SerializeField]
+    private bool _stopSpawning = false;
 
     // Start is called before the first frame update
     void Start()
@@ -81,7 +83,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator EnemySpawnRoutine()
     {
-        while (_isPlayerDead == false && _spawnCount < _toClear)
+        while (_isPlayerDead == false && _stopSpawning == false)
         {
             yield return new WaitForSeconds(2.5f);
             UpdateSpawnCount();
@@ -148,7 +150,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator GunnerSpawnRoutine()
     {
-        while(_isPlayerDead == false && _spawnCount < _toClear)
+        while (_isPlayerDead == false && _stopSpawning == false)
         {
             yield return new WaitForSeconds(Random.Range(20f, 35f));
             UpdateSpawnCount();
@@ -161,7 +163,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator AggressiveEnemyRoutine()
     {
-        while(_isPlayerDead == false && _spawnCount < _toClear)
+        while (_isPlayerDead == false && _stopSpawning == false)
         {
             yield return new WaitForSeconds(10f);
             UpdateSpawnCount();
@@ -173,7 +175,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SmartEnemyRoutine()
     {
-        while (_isPlayerDead == false && _spawnCount < _toClear)
+        while (_isPlayerDead == false && _stopSpawning == false)
         {
             yield return new WaitForSeconds(20f);
             UpdateSpawnCount();
@@ -217,18 +219,18 @@ public class SpawnManager : MonoBehaviour
         _spawnCount = 0;
         _enemiesKilled = 0;
         _toClear = _toClear + 5;
+        _stopSpawning = false;
         _isWaveClear = false;
     }
 
     private void UpdateSpawnCount()
     {
         _spawnCount++;
+
         if (_spawnCount == _toClear)
         {
-            StopCoroutine(EnemySpawnRoutine());
-            StopCoroutine(AggressiveEnemyRoutine());
-            StopCoroutine(GunnerSpawnRoutine());
-            StopCoroutine(SmartEnemyRoutine());
+            _stopSpawning = true;
+            StopAllCoroutines();
         }
     }
 

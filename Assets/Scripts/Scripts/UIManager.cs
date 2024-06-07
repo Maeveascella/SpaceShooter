@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     private Text _fuelText;
     [SerializeField]
     private Slider _bossHealthBar;
+    [SerializeField] 
+    private Text _magnetText;
 
     [SerializeField]
     private Text _waveText;
@@ -153,6 +155,16 @@ public class UIManager : MonoBehaviour
                 _shields[2].SetActive(true);
                 _shields[3].SetActive(true);
                 break;
+        }
+    }
+
+    public void UpdateMagnetText(int magnetTimer)
+    {
+        _magnetText.text = "Magnet: " + (magnetTimer);
+
+        if (magnetTimer <= 0)
+        {
+            _magnetText.text = "Magnet: Ready";
         }
     }
 }

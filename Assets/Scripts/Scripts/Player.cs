@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab, _tripleshotPrefab, _shieldPrefab, _leftEngine, _rightEngine, _thruster;
 
-    private int _ammo = 6, _lives = 3, _score = 0, _magnetUses = 1;
+    private int _ammo = 6, _lives = 3, _score = 0, _magnetUses = 1, _magnetTimer = 20;
 
     private bool _isBurstFireActive = false;
     private bool _isTripleShotActive = false;
@@ -76,6 +76,9 @@ public class Player : MonoBehaviour
         {
             PowerUpMagnet();
             _magnetUses--;
+            _magnetTimer = 19;
+            StartCoroutine(MagnetText());
+            StartCoroutine(MagnetRecharge());
         }
 
         if(Input.GetKey(KeyCode.Space) && Time.time > _nextfire &&_isBurstFireActive == true)
@@ -331,8 +334,18 @@ public class Player : MonoBehaviour
     {
         while (_magnetUses < 1)
         {
-            yield return new WaitForSeconds(30);
+            yield return new WaitForSeconds(20);
             _magnetUses++;
+        }
+    }
+
+    private IEnumerator MagnetText()
+    {
+        while (_magnetUses < 1)
+        {
+            _uiManager.UpdateMagnetText((int)_magnetTimer);
+            _magnetTimer--;
+            yield return new WaitForSeconds(1);
         }
     }
 }

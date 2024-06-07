@@ -21,6 +21,8 @@ public class Boss1 : MonoBehaviour
     private AudioSource _explosionAudio;
     private SpawnManager _spawnManager;
     private Player _player;
+    [SerializeField]
+    private GameObject _enemyContainer;
     // Start is called before the first frame update
     void Start()
     {
@@ -134,11 +136,13 @@ public class Boss1 : MonoBehaviour
             float randomX = Random.Range(-7.5f, 7.5f);
             if (spawnAggressive == true)
             {
-                Instantiate(_enemies[0], new Vector3(randomX, 8, 0), Quaternion.identity);
+                GameObject aggressiveEnemy = Instantiate(_enemies[0], new Vector3(randomX, 8, 0), Quaternion.identity);
+                aggressiveEnemy.transform.parent = _enemyContainer.transform;
             }
             else
             {
-                Instantiate(_enemies[1], new Vector3(randomX, 8, 0), Quaternion.identity);
+                GameObject smartEnemy = Instantiate(_enemies[1], new Vector3(randomX, 8, 0), Quaternion.identity);
+                smartEnemy.transform.parent = _enemyContainer.transform;
             }
         }
     }

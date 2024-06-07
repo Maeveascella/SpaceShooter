@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
 
     public void Gameover()
     {
+        _isWaveClear=false;
         _isGameOver=true;
     }
 
