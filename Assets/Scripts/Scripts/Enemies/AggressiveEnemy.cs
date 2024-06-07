@@ -18,6 +18,19 @@ public class AggressiveEnemy : MonoBehaviour
         _playerPos = GameObject.Find("Player").GetComponent<Transform>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+
+        if (_player == null)
+        {
+            Debug.LogError("Player Not Found");
+        }
+        if(_spawnManager == null)
+        {
+            Debug.LogError("Spawn Manager Not Found");
+        }
+        if (_explosionAudio == null)
+        {
+            Debug.LogError("ExplosionAudio Not Found");
+        }
     }
 
     // Update is called once per frame

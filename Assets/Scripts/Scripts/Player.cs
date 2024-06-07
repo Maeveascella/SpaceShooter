@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab, _tripleshotPrefab, _shieldPrefab, _leftEngine, _rightEngine, _thruster;
 
-    private int _ammo = 6, _lives = 3, _score = 0, _MagnetUses = 1;
+    private int _ammo = 6, _lives = 3, _score = 0, _magnetUses = 1;
 
     private bool _isBurstFireActive = false;
     private bool _isTripleShotActive = false;
@@ -22,12 +22,10 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     private ShieldScript _shield;
     private AudioSource _audioSource, _explodeAudio;
-    private Laser _laserScript;
     private SpawnManager _spawnManager;
     private Animator _cameraShake;
     private GameObject[] _powerUps;
     private GameObject _ammoCollectible, _lifeCollectible;
-    private Transform _enemyPos;
 
     private Powerup _basicPowerups;
     private Ammo _ammoPickup;
@@ -46,8 +44,6 @@ public class Player : MonoBehaviour
         _shield = GameObject.Find("Shield").GetComponent<ShieldScript>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<Animator>();
         _gunnerEnemy = GameObject.Find("Gunner Enemy").GetComponent<EnemyType2>();
-        _laserScript = _laserPrefab.GetComponent<Laser>();
-        _enemyPos = GameObject.FindWithTag("Enemy").GetComponent<Transform>();
 
 
 
@@ -77,9 +73,10 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
         
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && _magnetUses >= 1)
         {
             PowerUpMagnet();
+            _magnetUses--;
         }
 
         if(Input.GetKey(KeyCode.Space) && Time.time > _nextfire &&_isBurstFireActive == true)
@@ -328,6 +325,15 @@ public class Player : MonoBehaviour
         {
             yield return new WaitForSeconds(5f);
             _homingLaserIsActive=false;
+        }
+    }
+
+    private IEnumerator MagnetRecharge()
+    {
+        while (_magnetUses < 1)
+        {
+            yield return new WaitForSeconds(30);
+            _magnetUses++;
         }
     }
 }

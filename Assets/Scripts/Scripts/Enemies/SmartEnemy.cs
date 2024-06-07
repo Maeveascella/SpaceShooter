@@ -33,6 +33,23 @@ public class SmartEnemy : MonoBehaviour
         _laserPoint = GameObject.Find("GunPoint").GetComponent<Transform>();
         _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
+        if (_player == null)
+        {
+            Debug.LogError("Player Not Found");
+        }
+        if (_laserPoint == null)
+        {
+            Debug.LogError("Laser Source Not Found");
+        }
+        if (_explosionAudio == null)
+        {
+            Debug.LogError("ExplosionAudio Not Found");
+        }
+        if (_spawnManager == null)
+        {
+            Debug.LogError("Spawn Manager Not Found");
+        }
     }
 
     // Update is called once per frame

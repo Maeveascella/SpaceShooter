@@ -19,6 +19,11 @@ public class Bombs : MonoBehaviour
     {
         StartCoroutine(BombTimer());
         _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
+
+        if (_explosionAudio == null)
+        {
+            Debug.LogError("ExplosionAudio Not Found");
+        }
     }
 
     // Update is called once per frame

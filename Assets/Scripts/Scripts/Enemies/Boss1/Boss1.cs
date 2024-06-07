@@ -33,6 +33,28 @@ public class Boss1 : MonoBehaviour
         _explosionAudio = GameObject.Find("Explosion_Sound").GetComponent<AudioSource>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _player = GameObject.Find("Player").GetComponent<Player>();
+
+        if (_uiManager == null)
+        {
+            Debug.LogError("UI Manager Not Found");
+        }
+        if (_gameManager == null)
+        {
+            Debug.LogError("Game Manager Not Found");
+        }
+        if (_explosionAudio == null)
+        {
+            Debug.LogError("ExplosionAudio Not Found");
+        }
+        if (_spawnManager == null)
+        {
+            Debug.LogError("Spawn Manager Not Found");
+        }
+        if (_player == null)
+        {
+            Debug.LogError("Player Not found");
+        }
+
         _uiManager.RevealBossHP();
     }
 

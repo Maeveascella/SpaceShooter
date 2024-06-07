@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject _boss1;
 
     [SerializeField]
-    private GameObject[] Powerups;
+    private GameObject[] _powerUps;
     [SerializeField]
     private GameObject _ammo;
     [SerializeField]
@@ -45,15 +45,25 @@ public class SpawnManager : MonoBehaviour
 
 
 
-    private bool isPlayerDead = false;
+    private bool _isPlayerDead = false;
     [SerializeField]
-    private bool isWaveClear = false;
+    private bool _isWaveClear = false;
 
     // Start is called before the first frame update
     void Start()
     {
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if ( _gameManager == null )
+        {
+            Debug.LogError("Game Manager Not Found");
+        }
+
+        if ( _uiManager == null)
+        {
+            Debug.LogError("UI Manager Not Found");
+        }
     }
 
      public void StartSpawning()
@@ -71,7 +81,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator EnemySpawnRoutine()
     {
-        while (isPlayerDead == false && _spawnCount < _toClear)
+        while (_isPlayerDead == false && _spawnCount < _toClear)
         {
             yield return new WaitForSeconds(2.5f);
             UpdateSpawnCount();
@@ -84,21 +94,21 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator PowerupSpawnRoutine()
     {
-        while (isPlayerDead == false && isWaveClear == false)
+        while (_isPlayerDead == false && _isWaveClear == false)
         {
             yield return new WaitForSeconds(2.5f);
 
             float powerupSpawnrate = Random.Range(3f, 7f);
             Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
             int randomPowerup = Random.Range(0, 4);
-            GameObject newPowerup = Instantiate(Powerups[randomPowerup], posToSpawn, Quaternion.identity);
+            GameObject newPowerup = Instantiate(_powerUps[randomPowerup], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(powerupSpawnrate);
         }
     }
 
     private IEnumerator AmmoSpawnRoutine()
     {
-        while (isPlayerDead == false && isWaveClear == false)
+        while (_isPlayerDead == false && _isWaveClear == false)
         {
             yield return new WaitForSeconds(5f);
 
@@ -111,34 +121,34 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator LifeUpSpawnRoutine()
     {
-        while (isPlayerDead == false && isWaveClear == false)
+        while (_isPlayerDead == false && _isWaveClear == false)
         {
             yield return new WaitForSeconds(Random.Range(25f, 40f));
 
-            float LifeUpSpawnrate = Random.Range(25, 40f);
+            float lifeUpSpawnrate = Random.Range(25, 40f);
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), Random.Range(-3.8f, 0), 0);
             Instantiate(_lifeUp, posToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(LifeUpSpawnrate);
+            yield return new WaitForSeconds(lifeUpSpawnrate);
         }
     }
 
     private IEnumerator RarePowerupSpawnRoutine()
     {
-       while(isPlayerDead == false && isWaveClear == false)
+       while(_isPlayerDead == false && _isWaveClear == false)
         {
             yield return new WaitForSeconds(Random.Range(20f, 25f));
 
             float rapidFireSpawnRate = Random.Range(20f, 25f);
             Vector3 posToSpawn = new Vector3(Random.Range(-10.5f, 10.5f), 7.5f, 0);
             int randomRarePowerup = Random.Range(4, 6);
-            GameObject newPowerup = Instantiate(Powerups[randomRarePowerup], posToSpawn, Quaternion.identity);
+            GameObject newPowerup = Instantiate(_powerUps[randomRarePowerup], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(rapidFireSpawnRate);
         }
     }
 
     private IEnumerator GunnerSpawnRoutine()
     {
-        while(isPlayerDead == false && _spawnCount < _toClear)
+        while(_isPlayerDead == false && _spawnCount < _toClear)
         {
             yield return new WaitForSeconds(Random.Range(20f, 35f));
             UpdateSpawnCount();
@@ -151,7 +161,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator AggressiveEnemyRoutine()
     {
-        while(isPlayerDead == false && _spawnCount < _toClear)
+        while(_isPlayerDead == false && _spawnCount < _toClear)
         {
             yield return new WaitForSeconds(10f);
             UpdateSpawnCount();
@@ -163,7 +173,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SmartEnemyRoutine()
     {
-        while (isPlayerDead == false && _spawnCount < _toClear)
+        while (_isPlayerDead == false && _spawnCount < _toClear)
         {
             yield return new WaitForSeconds(20f);
             UpdateSpawnCount();
@@ -175,19 +185,19 @@ public class SpawnManager : MonoBehaviour
 
     public void PlayerDeath()
     {
-        isPlayerDead = true;
+        _isPlayerDead = true;
     }
 
     void WaveClear()
     {
-        isWaveClear = true;
+        _isWaveClear = true;
         _uiManager.WaveCleared();
         StopAllCoroutines();
     }
 
     public void BossWaveClear()
     {
-        isWaveClear = true;
+        _isWaveClear = true;
         StopAllCoroutines();
     }
 
@@ -207,7 +217,7 @@ public class SpawnManager : MonoBehaviour
         _spawnCount = 0;
         _enemiesKilled = 0;
         _toClear = _toClear + 5;
-        isWaveClear = false;
+        _isWaveClear = false;
     }
 
     private void UpdateSpawnCount()
@@ -225,7 +235,7 @@ public class SpawnManager : MonoBehaviour
     public void WaveThreeBoss()
     {
         Instantiate(_boss1, new Vector3(-.42f, 11, 0), Quaternion.identity);
-        isWaveClear = false;
+        _isWaveClear = false;
         StartCoroutine(AmmoSpawnRoutine());
     }
     

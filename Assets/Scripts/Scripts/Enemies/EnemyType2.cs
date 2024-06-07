@@ -43,12 +43,10 @@ public class EnemyType2 : MonoBehaviour
         {
             Debug.LogError("Player Not Found");
         }
-
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn Manager Not Found");
         }
-
         if (_explosionAudio == null)
         {
             Debug.LogError("Explosion Audio Not Found");
