@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyLaserPrefab: {fileID: 2697294904264439224, guid: 2785e32182e63c546be35d9a4e8ac3e2, type: 3}
-  _spreadShotPrefab: {fileID: 3603824998895564555, guid: 0c9da9eb27eccab4fa3ae095d57906a3, type: 3}
+  _spreadShotPrefab: {fileID: 3603824998895564555, guid: 257ff5666be9e054097e2cd94a874d04, type: 3}
   _explosionPrefab: {fileID: 4459018224749608772, guid: ba8c3775743a00042b20ae48df875325, type: 3}
   _spreadShotisReady: 0
   _willDodge: 0

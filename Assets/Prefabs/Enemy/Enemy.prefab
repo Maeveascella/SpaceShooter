@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 4
   _anim: {fileID: 0}
-  _enemyLasers: {fileID: 5690295749699420823, guid: 3d8d935c57470e64dac0bf7126d483f3, type: 3}
+  _enemyLasers: {fileID: 5690295749699420823, guid: fffecab1cb8f4694faf7957e32761efb, type: 3}
   _enemyShield: {fileID: 7552087454813739676}
 --- !u!212 &-7457065369623950757
 SpriteRenderer:
